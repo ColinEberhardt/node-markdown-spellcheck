@@ -4,6 +4,7 @@ import wordParser from './word-parser';
 import spellcheck from './spellcheck';
 import filters from './filters';
 import async from 'async';
+import spellConfig from './spell-config';
 import { generateSummaryReport, generateFileReport } from './report-generator';
 
 function getWords(src, options) {
@@ -41,4 +42,4 @@ function spellCallback(src, options, callback, done) {
   }, done);
 }
 
-export default { spell, spellFile, spellCallback, spellcheck, generateSummaryReport, generateFileReport };
+export default { spell, spellFile, spellCallback, spellcheck, generateSummaryReport, generateFileReport, spellConfig };

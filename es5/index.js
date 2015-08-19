@@ -28,6 +28,10 @@ var _async = require('async');
 
 var _async2 = _interopRequireDefault(_async);
 
+var _spellConfig = require('./spell-config');
+
+var _spellConfig2 = _interopRequireDefault(_spellConfig);
+
 var _reportGenerator = require('./report-generator');
 
 function getWords(src, options) {
@@ -64,5 +68,5 @@ function spellCallback(src, options, callback, done) {
   }, done);
 }
 
-exports['default'] = { spell: spell, spellFile: spellFile, spellCallback: spellCallback, spellcheck: _spellcheck2['default'], generateSummaryReport: _reportGenerator.generateSummaryReport, generateFileReport: _reportGenerator.generateFileReport };
+exports['default'] = { spell: spell, spellFile: spellFile, spellCallback: spellCallback, spellcheck: _spellcheck2['default'], generateSummaryReport: _reportGenerator.generateSummaryReport, generateFileReport: _reportGenerator.generateFileReport, spellConfig: _spellConfig2['default'] };
 module.exports = exports['default'];
