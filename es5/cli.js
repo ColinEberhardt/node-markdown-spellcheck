@@ -40,12 +40,13 @@ var buildVersion = JSON.parse(packageConfig).version;
 _commander2['default'].version(buildVersion)
 // default cli behaviour will be an interactive walkthrough each error, with suggestions,
 // options to replace etc.
-.option('-r, --report', 'Outputs a full report which details the unique spelling errors found.').option('-n, --ignore-numbers', 'Ignores numbers.').option('--en-us', 'American english dictionary.').option('--en-gb', 'British english dictionary.').option('-d, --dictionary [file]', 'specify a custom dictionary file - it should not include the file extension and will load .dic and .aiff.').option('-a, --ignore-acronyms', 'Ignores acronyms.').option('-x, --no-suggestions', 'Do not suggest words (can be slow)').usage("[options] source-file source-file").parse(process.argv);
+.option('-r, --report', 'Outputs a full report which details the unique spelling errors found.').option('-n, --ignore-numbers', 'Ignores numbers.').option('--en-us', 'American english dictionary.').option('--en-gb', 'British english dictionary.').option('-d, --dictionary [file]', 'specify a custom dictionary file - it should not include the file extension and will load .dic and .aiff.').option('-a, --ignore-acronyms', 'Ignores acronyms.').option('-x, --no-suggestions', 'Do not suggest words (can be slow)').option('-m, --monochrome', 'Generate a monochrome report (good for CI builds)').usage("[options] source-file source-file").parse(process.argv);
 
 var options = {
   ignoreAcronyms: _commander2['default'].ignoreAcronyms,
   ignoreNumbers: _commander2['default'].ignoreNumbers,
   suggestions: _commander2['default'].suggestions,
+  monochrome: _commander2['default'].monochrome,
   dictionary: {
     language: _commander2['default'].enUs ? "en-us" : _commander2['default'].enGb ? "en-gb" : undefined,
     file: _commander2['default'].dictionary
@@ -65,7 +66,7 @@ if (!_commander2['default'].args.length) {
     if (_commander2['default'].report) {
       var errors = _index2['default'].spell(src, options);
       if (errors.length > 0) {
-        console.log(_reportGenerator.generateFileReport(filename, { errors: errors, src: src }));
+        console.log(_reportGenerator.generateFileReport(filename, options, { errors: errors, src: src }));
         process.exitCode = 1;
       }
       fileProcessed(null, errors);
@@ -74,6 +75,6 @@ if (!_commander2['default'].args.length) {
       _cliInteractive2['default'](filename, src, options, fileProcessed);
     }
   }, function (e, results) {
-    console.log(_reportGenerator.generateSummaryReport(results));
+    console.log(_reportGenerator.generateSummaryReport(results, options));
   });
 }

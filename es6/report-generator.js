@@ -1,10 +1,12 @@
-import chalk from 'chalk';
+import chalkProvider from './chalk-provider';
 import context from './context';
+
 
 // Generates a report that summarises the spelling errors found across multiple
 // markdown files.
 // results is an array containing the errors (as a nested array) for each file.
-export function generateSummaryReport(results) {
+export function generateSummaryReport(results, options) {
+  const chalk = chalkProvider(options);
   const errorCount = results.map((e) =>  e && e.length ? e.length : 0)
                             .reduce((p, c) => p + c, 0);
 
@@ -19,12 +21,13 @@ export function generateSummaryReport(results) {
 }
 
 // Generates a report for the errors found in a single markdown file.
-export function generateFileReport(file, spellingInfo) {
+export function generateFileReport(file, options, spellingInfo) {
+  const chalk = chalkProvider(options);
   let report = `    ${chalk.bold(file)}\n`;
 
   for (let k = 0; k < spellingInfo.errors.length; k++) {
     const error = spellingInfo.errors[k];
-    const displayBlock = context.getBlock(spellingInfo.src, error.index, error.word.length);
+    const displayBlock = context.getBlock(spellingInfo.src, error.index, error.word.length, options);
 
     const lineNumber = String(displayBlock.lineNumber);
     const lineNumberPadding = Array(10 - lineNumber.length).join(' ');

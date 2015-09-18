@@ -4,9 +4,9 @@ exports.__esModule = true;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _chalk = require('chalk');
+var _chalkProvider = require('./chalk-provider');
 
-var _chalk2 = _interopRequireDefault(_chalk);
+var _chalkProvider2 = _interopRequireDefault(_chalkProvider);
 
 function getLines(src, index, noBefore, noAfter) {
   var beforeLines = [];
@@ -66,7 +66,8 @@ function getLines(src, index, noBefore, noAfter) {
 }
 
 exports['default'] = {
-  getBlock: function getBlock(src, index, length) {
+  getBlock: function getBlock(src, index, length, options) {
+    var chalk = _chalkProvider2['default'](options);
     var lineInfo = getLines(src, index, 2, 2);
     var lineStart = 0;
     var lineEnd = lineInfo.line.length;
@@ -76,7 +77,7 @@ exports['default'] = {
     if (lineEnd - (lineInfo.column + length) > 30) {
       lineEnd = lineInfo.column + length + 30;
     }
-    var info = lineInfo.line.substring(lineStart, lineInfo.column) + _chalk2['default'].red(lineInfo.line.substr(lineInfo.column, length)) + lineInfo.line.substring(lineInfo.column + length, lineEnd);
+    var info = lineInfo.line.substring(lineStart, lineInfo.column) + chalk.red(lineInfo.line.substr(lineInfo.column, length)) + lineInfo.line.substring(lineInfo.column + length, lineEnd);
     return {
       info: info,
       lineNumber: lineInfo.lineNumber

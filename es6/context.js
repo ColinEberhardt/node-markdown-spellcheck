@@ -1,4 +1,4 @@
-import chalk from 'chalk';
+import chalkProvider from './chalk-provider';
 
 function getLines(src, index, noBefore, noAfter) {
   const beforeLines = [];
@@ -60,7 +60,8 @@ function getLines(src, index, noBefore, noAfter) {
 }
 
 export default {
-  getBlock(src, index, length) {
+  getBlock(src, index, length, options) {
+    const chalk = chalkProvider(options);
     const lineInfo = getLines(src, index, 2, 2);
     let lineStart = 0;
     let lineEnd = lineInfo.line.length;

@@ -6,9 +6,9 @@ exports.generateFileReport = generateFileReport;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _chalk = require('chalk');
+var _chalkProvider = require('./chalk-provider');
 
-var _chalk2 = _interopRequireDefault(_chalk);
+var _chalkProvider2 = _interopRequireDefault(_chalkProvider);
 
 var _context = require('./context');
 
@@ -18,7 +18,8 @@ var _context2 = _interopRequireDefault(_context);
 // markdown files.
 // results is an array containing the errors (as a nested array) for each file.
 
-function generateSummaryReport(results) {
+function generateSummaryReport(results, options) {
+  var chalk = _chalkProvider2['default'](options);
   var errorCount = results.map(function (e) {
     return e && e.length ? e.length : 0;
   }).reduce(function (p, c) {
@@ -30,19 +31,20 @@ function generateSummaryReport(results) {
   var areOrIs = results.length > 1 ? 'are' : 'is';
 
   if (errorCount > 0) {
-    return _chalk2['default'].red('>>') + ' ' + errorCount + ' spelling ' + errorPlural + ' found in ' + results.length + ' ' + filePlural;
+    return chalk.red('>>') + ' ' + errorCount + ' spelling ' + errorPlural + ' found in ' + results.length + ' ' + filePlural;
   }
-  return _chalk2['default'].green('>>') + ' ' + results.length + ' ' + filePlural + ' ' + areOrIs + ' free from spelling errors';
+  return chalk.green('>>') + ' ' + results.length + ' ' + filePlural + ' ' + areOrIs + ' free from spelling errors';
 }
 
 // Generates a report for the errors found in a single markdown file.
 
-function generateFileReport(file, spellingInfo) {
-  var report = '    ' + _chalk2['default'].bold(file) + '\n';
+function generateFileReport(file, options, spellingInfo) {
+  var chalk = _chalkProvider2['default'](options);
+  var report = '    ' + chalk.bold(file) + '\n';
 
   for (var k = 0; k < spellingInfo.errors.length; k++) {
     var error = spellingInfo.errors[k];
-    var displayBlock = _context2['default'].getBlock(spellingInfo.src, error.index, error.word.length);
+    var displayBlock = _context2['default'].getBlock(spellingInfo.src, error.index, error.word.length, options);
 
     var lineNumber = String(displayBlock.lineNumber);
     var lineNumberPadding = Array(10 - lineNumber.length).join(' ');

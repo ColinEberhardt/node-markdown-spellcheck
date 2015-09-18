@@ -22,6 +22,7 @@ program
   .option('-d, --dictionary [file]', 'specify a custom dictionary file - it should not include the file extension and will load .dic and .aiff.')
   .option('-a, --ignore-acronyms', 'Ignores acronyms.')
   .option('-x, --no-suggestions', 'Do not suggest words (can be slow)')
+  .option('-m, --monochrome', 'Generate a monochrome report (good for CI builds)')
   .usage("[options] source-file source-file")
   .parse(process.argv);
 
@@ -29,6 +30,7 @@ const options = {
   ignoreAcronyms: program.ignoreAcronyms,
   ignoreNumbers: program.ignoreNumbers,
   suggestions: program.suggestions,
+  monochrome: program.monochrome,
   dictionary: {
     language: program.enUs ? "en-us" : program.enGb ? "en-gb" : undefined,
     file: program.dictionary
@@ -49,7 +51,7 @@ else {
     if (program.report) {
       const errors = markdownSpellcheck.spell(src, options);
       if (errors.length > 0) {
-        console.log(generateFileReport(filename, { errors: errors, src: src }));
+        console.log(generateFileReport(filename, options, { errors: errors, src: src }));
         process.exitCode = 1;
       }
       fileProcessed(null, errors);
@@ -59,6 +61,6 @@ else {
       cliInteractive(filename, src, options, fileProcessed);
     }
   }, (e, results) => {
-    console.log(generateSummaryReport(results));
+    console.log(generateSummaryReport(results, options));
   });
 }
